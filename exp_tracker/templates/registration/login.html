@@ -1,0 +1,36 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login_styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</head>
+
+{% block content %}
+    {% if form.errors %}
+        <p>
+            Your Username or Password is incorrect. Please try again.
+        </p>
+    {% endif %}
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="container">
+            <div class="form-container">
+                <div class="form">
+                    <h2 style="text-align: center;">Sign In</h2>
+                    {{form.username.label_tag}}
+                    {{form.username}}
+                    <br><br>
+                    {{form.password.label_tag}}
+                    {{form.password}}
+                    
+                </div>
+                <br>
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+
+            </div>
+            
+        </div>
+    </form>
+{% endblock %}
