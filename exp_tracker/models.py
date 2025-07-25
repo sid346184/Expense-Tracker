@@ -27,12 +27,27 @@ class Expense(models.Model):
         super(Expense, self).save(*args, **kwargs)
 
     def calculate_monthly_expenses(self):
-        if self.long_term:
+        if self.long_term and self.end_date and self.date:
+            # Calculate number of days between dates
+            days = (self.end_date - self.date).days
+            if days <= 0:
+                return self.amount  # Return full amount if end_date is same or before start date
+                
             if self.interest_rate == 0:
-                return self.amount / ((self.end_date - self.date).days / 30)
+                # For zero interest, simply divide the amount by number of months
+                months = max(1, days / 30)  # Ensure at least 1 month
+                return self.amount / months
             else:
+                # Calculate number of months between dates
                 months = (self.end_date.year - self.date.year) * 12 + self.end_date.month - self.date.month
+                if months <= 0:
+                    return self.amount  # Return full amount if less than a month
+                    
+                # Calculate EMI using compound interest formula
                 monthly_rate = self.interest_rate/12/100
-                monthly_expense = (self.amount * monthly_rate) / (1 - (1 + monthly_rate) ** -months)
-                return monthly_expense
+                try:
+                    monthly_expense = (self.amount * monthly_rate * (1 + monthly_rate)**months) / ((1 + monthly_rate)**months - 1)
+                    return monthly_expense
+                except (ZeroDivisionError, OverflowError):
+                    return self.amount  # Return full amount if calculation fails
         return self.amount
