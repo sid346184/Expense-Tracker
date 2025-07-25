@@ -2,15 +2,15 @@
     "version": 2,
     "builds": [
       {
-        "src": "ExpenseTracker/ExpenseTracker/wsgi.py",
+        "src": "ExpenseTracker/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.12" }
       },
       {
         "src": "build_files.sh",
         "use": "@vercel/static-build",
         "config": {
-          "distDir": "staticfiles_build"
+          "distDir": "staticfiles"
         }
       }
     ],
@@ -21,7 +21,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "ExpenseTracker/ExpenseTracker/wsgi.py"
+        "dest": "ExpenseTracker/wsgi.py"
       }
     ]
   }
